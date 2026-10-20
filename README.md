@@ -10,11 +10,11 @@ YozStudy es una aplicación móvil Android que ayuda a estudiantes a organizar s
 
 **Público objetivo:** estudiantes de colegio, universidad o autodidactas.
 
-## Integrantes
+## Integrante
 
 | Nombre | Rol |
 |---|---|
-| [Nombre completo] | [Rol / módulo] |
+| Yordi Contreras Zamora| Estudiante |
 
 ## Funcionalidades
 
