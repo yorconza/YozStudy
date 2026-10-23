@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">YozStudy</string>
+    <string name="nav_mapa">Map</string>
+    <string name="nav_routine">Routine</string>
+    <string name="nav_profile">Profile</string>
+    <string name="my_routine">My routine</string>
+    <string name="my_blocks">My Blocks</string>
+    <string name="new_block">New block</string>
+    <string name="edit_block">Edit block</string>
+    <string name="study_places">My study places</string>
+    <string name="block_details">Block details</string>
+    <string name="new_place">New place</string>
+    <string name="edit_place">Edit place</string>
+    <string name="today_progress">Today progress</string>
+    <string name="progress_count">%1$d de %2$d blocks</string>
+
+
+
+    <string name="filter_subject">Subject</string>
+    <string name="filter_day">Day</string>
+    <string name="filter_priority">Priority</string>
+    <string name="filter_status">Status</string>
+    <string name="filter_all_subjects">All</string>
+    <string name="filter_all_days">All</string>
+    <string name="filter_all_priorities">All</string>
+    <string name="filter_all_statuses">All</string>
+    <string name="filter_clear">Clear filters</string>
+    <string name="sort_label">Sort by</string>
+    <string name="sort_date">Date</string>
+    <string name="sort_priority">Priority</string>
+    <plurals name="results_count">
+        <item quantity="one">%d result</item>
+        <item quantity="other">%d results</item>
+    </plurals>
+
+    <!-- Priority and status -->
+    <string name="priority_low">Low</string>
+    <string name="priority_medium">Medium</string>
+    <string name="priority_high">High</string>
+    <string name="status_pending">Pending</string>
+    <string name="status_done">Done</string>
+
+    <!-- Form -->
+    <string name="label_subject">Subject</string>
+    <string name="label_topic">Topic</string>
+    <string name="label_date">Date</string>
+    <string name="label_time">Time</string>
+    <string name="label_duration">Duration</string>
+    <string name="label_priority">Priority</string>
+    <string name="label_status">Status</string>
+    <string name="label_place">Study place</string>
+    <string name="label_photo">Notes photo (optional)</string>
+    <string name="place_none">No place</string>
+    <string name="duration_minutes">%d minutes</string>
+    <string name="duration_hours_minutes">%1$d h %2$d min</string>
+    <string name="error_topic_empty">Enter a topic</string>
+    <string name="error_subject_missing">Choose a subject</string>
+    <string name="error_duration_invalid">The duration must be between %1$d and %2$d minutes</string>
+
+    <!-- Actions -->
+    <string name="action_add">Add</string>
+    <string name="action_save">Save</string>
+    <string name="action_save_changes">Save changes</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_accept">OK</string>
+    <string name="action_skip">Skip</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_mark_done">Mark as done</string>
+    <string name="action_mark_pending">Mark as pending</string>
+    <string name="action_take_photo">Camera</string>
+    <string name="action_pick_from_gallery">Gallery</string>
+    <string name="action_remove_photo">Remove photo</string>
+    <string name="action_search_place">Search place</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_delete_block_title">Delete this block?</string>
+    <string name="dialog_delete_block_message">\"%1$s\" and its attached photo will be permanently removed. This action cannot be undone.</string>
+    <string name="dialog_pick_date_title">Choose a date</string>
+    <string name="dialog_pick_time_title">Choose a time</string>
+    <string name="dialog_rate_place_title">How did it go at %1$s?</string>
+    <string name="dialog_rate_place_message">Rate the place so you can find where you study best.</string>
+    <string name="dialog_delete_place_title">Delete this place?</string>
+    <string name="dialog_delete_place_message">\"%1$s\" and its ratings will be removed. Your study blocks will be kept, without a place.</string>
+
+    <!-- Place ratings and map -->
+    <string name="rating_silence">Silence</string>
+    <string name="rating_wifi">Wi-Fi</string>
+    <string name="rating_comfort">Comfort</string>
+    <string name="place_name">Place name</string>
+    <string name="place_address">Address (optional)</string>
+    <string name="place_score">%1$.1f</string>
+    <string name="place_no_reviews">No ratings yet</string>
+    <string name="place_best_title">Your best place to study</string>
+    <plurals name="place_reviews_count">
+        <item quantity="one">%d rating</item>
+        <item quantity="other">%d ratings</item>
+    </plurals>
+    <plurals name="place_completed_blocks">
+        <item quantity="one">%d block completed here</item>
+        <item quantity="other">%d blocks completed here</item>
+    </plurals>
+    <string name="error_place_name_empty">Enter a name for the place</string>
+
+    <!-- Empty states -->
+    <string name="empty_blocks_title">You have no study blocks yet</string>
+    <string name="empty_blocks_hint">Tap + to plan your first study session</string>
+    <string name="empty_results_title">No blocks match these filters</string>
+    <string name="empty_places_title">You have not saved any study places yet</string>
+    <string name="empty_places_hint">Add the places where you study to see them on the map</string>
+    <string name="block_not_found">This study block no longer exists</string>
+
+    <!-- Messages -->
+    <string name="message_block_saved">Study block saved</string>
+    <string name="message_block_deleted">Study block deleted</string>
+    <string name="message_place_saved">Place saved</string>
+    <string name="message_place_deleted">Place deleted</string>
+    <string name="message_review_saved">Thanks for rating this place</string>
+
+    <!-- Permissions -->
+    <string name="permission_camera_rationale">The camera is used to take photos of your notes and the whiteboard.</string>
+    <string name="permission_location_rationale">Your location is used to show where you are on the map.</string>
+
+    <!-- Accessibility -->
+    <string name="cd_add_block">Add study block</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_block_photo">Photo attached to the study block</string>
+    <string name="cd_mark_done">Mark block as done</string>
+</resources>
