@@ -1,14 +1,14 @@
-package com.domain.repository
+package com.example.yozstudy.domain.repository
 
-import com.domain.model.BlockStatus
-import com.domain.model.DailyProgress
-import com.domain.model.PlaceReview
-import com.domain.model.PlaceStats
-import com.domain.model.SortOption
-import com.domain.model.StudyBlock
-import com.domain.model.StudyBlockFilter
-import com.domain.model.StudyPlace
-import com.domain.model.Subject
+import com.example.yozstudy.domain.model.BlockStatus
+import com.example.yozstudy.domain.model.DailyProgress
+import com.example.yozstudy.domain.model.PlaceReview
+import com.example.yozstudy.domain.model.PlaceStats
+import com.example.yozstudy.domain.model.SortOption
+import com.example.yozstudy.domain.model.StudyBlock
+import com.example.yozstudy.domain.model.StudyBlockFilter
+import com.example.yozstudy.domain.model.StudyPlace
+import com.example.yozstudy.domain.model.Subject
 import kotlinx.coroutines.flow.Flow
 
 /**
