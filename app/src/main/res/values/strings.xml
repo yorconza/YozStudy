@@ -1,3 +1,134 @@
 <resources>
+
     <string name="app_name">YozStudy</string>
+    <string name="nav_mapa">Mapa</string>
+    <string name="nav_routine">Rutina</string>
+    <string name="nav_profile">Perfil</string>
+    <string name="my_routine">Mi rutina</string>
+    <string name="my_blocks">Mis bloques</string>
+    <string name="new_block">Nuevo bloque</string>
+    <string name="edit_block">Editar bloque</string>
+    <string name="study_places">Mis lugares de estudio</string>
+    <string name="block_details">Detalle del bloque</string>
+    <string name="new_place">Nuevo lugar</string>
+    <string name="edit_place">Editar lugar</string>
+    <string name="today_progress">Progeso de hoy</string>
+    <string name="progress_count">%1$d de %2$d bloques</string>
+
+
+
+    <string name="filter_subject">Materia</string>
+    <string name="filter_day">Día</string>
+    <string name="filter_priority">Prioridad</string>
+    <string name="filter_status">Estado</string>
+    <string name="filter_all_subjects">Todas</string>
+    <string name="filter_all_days">Todos</string>
+    <string name="filter_all_priorities">Todas</string>
+    <string name="filter_all_statuses">Todos</string>
+    <string name="filter_clear">Quitar filtros</string>
+    <string name="sort_label">Ordenar por</string>
+    <string name="sort_date">Fecha</string>
+    <string name="sort_priority">Prioridad</string>
+    <plurals name="results_count">
+        <item quantity="one">%d resultado</item>
+        <item quantity="many">%d resultados</item>
+        <item quantity="other">%d resultados</item>
+    </plurals>
+
+    <!-- Priority and status -->
+    <string name="priority_low">Baja</string>
+    <string name="priority_medium">Media</string>
+    <string name="priority_high">Alta</string>
+    <string name="status_pending">Pendiente</string>
+    <string name="status_done">Hecho</string>
+
+    <!-- Form -->
+    <string name="label_subject">Materia</string>
+    <string name="label_topic">Tema</string>
+    <string name="label_date">Fecha</string>
+    <string name="label_time">Hora</string>
+    <string name="label_duration">Duración</string>
+    <string name="label_priority">Prioridad</string>
+    <string name="label_status">Estado</string>
+    <string name="label_place">Lugar de estudio</string>
+    <string name="label_photo">Foto de apuntes (opcional)</string>
+    <string name="place_none">Sin lugar</string>
+    <string name="duration_minutes">%d minutos</string>
+    <string name="duration_hours_minutes">%1$d h %2$d min</string>
+    <string name="error_topic_empty">Escribe un tema</string>
+    <string name="error_subject_missing">Elige una materia</string>
+    <string name="error_duration_invalid">La duración debe estar entre %1$d y %2$d minutos</string>
+
+    <!-- Actions -->
+    <string name="action_add">Agregar</string>
+    <string name="action_save">Guardar</string>
+    <string name="action_save_changes">Guardar cambios</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_accept">Aceptar</string>
+    <string name="action_skip">Omitir</string>
+    <string name="action_edit">Editar</string>
+    <string name="action_delete">Borrar</string>
+    <string name="action_mark_done">Marcar como hecho</string>
+    <string name="action_mark_pending">Marcar como pendiente</string>
+    <string name="action_take_photo">Cámara</string>
+    <string name="action_pick_from_gallery">Galería</string>
+    <string name="action_remove_photo">Quitar foto</string>
+    <string name="action_search_place">Buscar lugar</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_delete_block_title">¿Borrar este bloque?</string>
+    <string name="dialog_delete_block_message">Se eliminará \"%1$s\" y su foto adjunta. Esta acción no se puede deshacer.</string>
+    <string name="dialog_pick_date_title">Elegir fecha</string>
+    <string name="dialog_pick_time_title">Elegir hora</string>
+    <string name="dialog_rate_place_title">¿Cómo te fue en %1$s?</string>
+    <string name="dialog_rate_place_message">Califica el lugar para descubrir dónde estudias mejor.</string>
+    <string name="dialog_delete_place_title">¿Borrar este lugar?</string>
+    <string name="dialog_delete_place_message">Se eliminará \"%1$s\" y sus calificaciones. Tus bloques de estudio se conservarán, sin lugar.</string>
+
+    <!-- Place ratings and map -->
+    <string name="rating_silence">Silencio</string>
+    <string name="rating_wifi">Wi-Fi</string>
+    <string name="rating_comfort">Comodidad</string>
+    <string name="place_name">Nombre del lugar</string>
+    <string name="place_address">Dirección (opcional)</string>
+    <string name="place_score">%1$.1f</string>
+    <string name="place_no_reviews">Aún sin calificaciones</string>
+    <string name="place_best_title">Tu mejor lugar para estudiar</string>
+    <plurals name="place_reviews_count">
+        <item quantity="one">%d calificación</item>
+        <item quantity="many">%d calificaciones</item>
+        <item quantity="other">%d calificaciones</item>
+    </plurals>
+    <plurals name="place_completed_blocks">
+        <item quantity="one">%d bloque completado aquí</item>
+        <item quantity="many">%d bloques completados aquí</item>
+        <item quantity="other">%d bloques completados aquí</item>
+    </plurals>
+    <string name="error_place_name_empty">Escribe un nombre para el lugar</string>
+
+    <!-- Empty states -->
+    <string name="empty_blocks_title">Aún no tienes bloques de estudio</string>
+    <string name="empty_blocks_hint">Toca + para planificar tu primera sesión de estudio</string>
+    <string name="empty_results_title">Ningún bloque coincide con estos filtros</string>
+    <string name="empty_places_title">Aún no has guardado lugares de estudio</string>
+    <string name="empty_places_hint">Agrega los lugares donde estudias para verlos en el mapa</string>
+    <string name="block_not_found">Este bloque de estudio ya no existe</string>
+
+    <!-- Messages -->
+    <string name="message_block_saved">Bloque de estudio guardado</string>
+    <string name="message_block_deleted">Bloque de estudio borrado</string>
+    <string name="message_place_saved">Lugar guardado</string>
+    <string name="message_place_deleted">Lugar borrado</string>
+    <string name="message_review_saved">Gracias por calificar este lugar</string>
+
+    <!-- Permissions -->
+    <string name="permission_camera_rationale">La cámara se usa para tomar fotos de tus apuntes y de la pizarra.</string>
+    <string name="permission_location_rationale">Tu ubicación se usa para mostrar dónde estás en el mapa.</string>
+
+    <!-- Accessibility -->
+    <string name="cd_add_block">Agregar bloque de estudio</string>
+    <string name="cd_back">Atrás</string>
+    <string name="cd_block_photo">Foto adjunta al bloque de estudio</string>
+    <string name="cd_mark_done">Marcar el bloque como hecho</string>
+
 </resources>
