@@ -9,76 +9,63 @@ import com.example.yozstudy.domain.model.StudyBlock
 import com.example.yozstudy.domain.model.StudyBlockFilter
 import com.example.yozstudy.domain.model.StudyPlace
 import com.example.yozstudy.domain.model.Subject
-import kotlinx.coroutines.flow.Flow
 
-/**
- * Single access point to the app data.
- *
- * Reads return a [Flow] so the screens update automatically when the data changes.
- * Writes are `suspend` functions so a persistent implementation (for example Room)
- * can replace [com.example.yozstudy.data.memory.MemoryDataRepository] without touching the ViewModels.
- */
+/** Single access point to the app data using direct synchronous methods. */
 interface StudyRepository {
 
     // region Study blocks
 
     /** Blocks that match [filter], sorted according to [sort]. */
-    fun observeBlocks(
+    fun getBlocksSync(
         filter: StudyBlockFilter = StudyBlockFilter(),
         sort: SortOption = SortOption.DATE
-    ): Flow<List<StudyBlock>>
+    ): List<StudyBlock>
 
-    /** Emits the block with the given id, or null if it does not exist (or was deleted). */
-    fun observeBlock(blockId: Long): Flow<StudyBlock?>
-
-    suspend fun getBlock(blockId: Long): StudyBlock?
+    fun getBlockSync(blockId: Long): StudyBlock?
 
     /** Saves a new block and returns the id assigned to it. */
-    suspend fun addBlock(block: StudyBlock): Long
+    fun addBlockSync(block: StudyBlock): Long
 
-    suspend fun updateBlock(block: StudyBlock)
+    fun updateBlockSync(block: StudyBlock)
 
-    suspend fun deleteBlock(blockId: Long)
+    fun deleteBlockSync(blockId: Long)
 
-    suspend fun setBlockStatus(blockId: Long, status: BlockStatus)
+    fun setBlockStatusSync(blockId: Long, status: BlockStatus)
 
     /** Progress of the blocks planned for the day that contains [dayMillis]. */
-    fun observeDailyProgress(dayMillis: Long): Flow<DailyProgress>
+    fun getDailyProgressSync(dayMillis: Long): DailyProgress
 
     // endregion
 
     // region Subjects
 
-    fun observeSubjects(): Flow<List<Subject>>
+    fun getSubjectsSync(): List<Subject>
 
-    suspend fun addSubject(subject: Subject): Long
+    fun addSubjectSync(subject: Subject): Long
 
     // endregion
 
     // region Places
 
-    fun observePlaces(): Flow<List<StudyPlace>>
+    fun getPlacesSync(): List<StudyPlace>
 
-    fun observePlace(placeId: Long): Flow<StudyPlace?>
+    fun getPlaceSync(placeId: Long): StudyPlace?
 
-    /** Places with their average ratings, best rated first. */
-    fun observePlaceStats(): Flow<List<PlaceStats>>
+    fun getPlaceStatsSync(): List<PlaceStats>
 
-    suspend fun addPlace(place: StudyPlace): Long
+    fun addPlaceSync(place: StudyPlace): Long
 
-    suspend fun updatePlace(place: StudyPlace)
+    fun updatePlaceSync(place: StudyPlace)
 
-    /** Deletes the place and its reviews. Blocks that used it are kept, without a place. */
-    suspend fun deletePlace(placeId: Long)
+    fun deletePlaceSync(placeId: Long)
 
     // endregion
 
     // region Reviews
 
-    fun observeReviews(placeId: Long): Flow<List<PlaceReview>>
+    fun getReviewsSync(placeId: Long): List<PlaceReview>
 
-    /** Saves a new review and returns the id assigned to it. Scores are limited to 1..5. */
-    suspend fun addReview(review: PlaceReview): Long
+    fun addReviewSync(review: PlaceReview): Long
 
     // endregion
 }

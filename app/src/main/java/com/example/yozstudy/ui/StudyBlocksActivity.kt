@@ -6,9 +6,6 @@ import android.widget.AdapterView
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yozstudy.R
 import com.example.yozstudy.ServiceLocator
@@ -18,11 +15,9 @@ import com.example.yozstudy.domain.model.Priority
 import com.example.yozstudy.domain.model.SortOption
 import com.example.yozstudy.domain.model.StudyBlockWithDetails
 import com.example.yozstudy.domain.model.Subject
-import com.example.yozstudy.viewmodel.StudyBlockListUiState
 import com.example.yozstudy.viewmodel.StudyBlockListViewModel
 import com.example.yozstudy.viewmodel.StudyViewModelFactory
 import com.google.android.material.chip.Chip
-import kotlinx.coroutines.launch
 
 class StudyBlocksActivity : AppCompatActivity() {
 
@@ -40,7 +35,15 @@ class StudyBlocksActivity : AppCompatActivity() {
 
         setupRecyclerView()
         setupSortSpinner()
-        setupObservers()
+
+        // Carga inicial de la interfaz de forma síncrona
+        refreshUi()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refrescar cada vez que la activity vuelva a primer plano por si hubo cambios
+        refreshUi()
     }
 
     private fun setupRecyclerView() {
@@ -61,25 +64,21 @@ class StudyBlocksActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selectedSort = if (position == 0) SortOption.PRIORITY else SortOption.DATE
                 viewModel.onSortChanged(selectedSort)
+                refreshUi()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
 
-    private fun setupObservers() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    updateUi(state)
-                }
-            }
-        }
-    }
+    private fun refreshUi() {
+        // get data by viewmodel, calling methods
+        val items = viewModel.getFilteredBlocks()
+        val subjects = viewModel.getSubjects()
+        val currentFilter = viewModel.getCurrentFilter()
 
-    private fun updateUi(state: StudyBlockListUiState) {
         // 1. Update results count (using quantity strings plurals from strings.xml)
-        val count = state.items.size
+        val count = items.size
         binding.tvResultsCount.text = resources.getQuantityString(
             R.plurals.results_count,
             count,
@@ -87,19 +86,19 @@ class StudyBlocksActivity : AppCompatActivity() {
         )
 
         // 2. Populate subject chips if not already populated
-        populateSubjectChips(state.subjects, state.filter.subjectId)
+        populateSubjectChips(subjects, currentFilter.subjectId)
 
         // 3. Populate/update day chips
-        populateDayChips(state.filter.dayOfWeek)
+        populateDayChips(currentFilter.dayOfWeek)
 
         // 4. Populate/update priority chips
-        populatePriorityChips(state.filter.priority)
+        populatePriorityChips(currentFilter.priority)
 
         // 5. Populate/update status chips
-        populateStatusChips(state.filter.status)
+        populateStatusChips(currentFilter.status)
 
         // 6. Submit updated list to the adapter
-        updateFilteredList(state.items)
+        updateFilteredList(items)
     }
 
     private fun populateSubjectChips(subjects: List<Subject>, selectedSubjectId: Long?) {
@@ -108,6 +107,7 @@ class StudyBlocksActivity : AppCompatActivity() {
         // "All" chip
         val allChip = createChip(getString(R.string.filter_all_subjects), selectedSubjectId == null) {
             viewModel.onSubjectFilterChanged(null)
+            refreshUi()
         }
         binding.chipGroupSubjects.addView(allChip)
 
@@ -116,6 +116,7 @@ class StudyBlocksActivity : AppCompatActivity() {
             val isSelected = subject.id == selectedSubjectId
             val chip = createChip(subject.name, isSelected) {
                 viewModel.onSubjectFilterChanged(subject.id)
+                refreshUi()
             }
             binding.chipGroupSubjects.addView(chip)
         }
@@ -133,6 +134,7 @@ class StudyBlocksActivity : AppCompatActivity() {
             val isSelected = dayConst == selectedDay
             val chip = createChip(label, isSelected) {
                 viewModel.onDayFilterChanged(if (isSelected) null else dayConst)
+                refreshUi()
             }
             binding.chipGroupDays.addView(chip)
         }
@@ -152,6 +154,7 @@ class StudyBlocksActivity : AppCompatActivity() {
             val isSelected = priority == selectedPriority
             val chip = createChip(label, isSelected) {
                 viewModel.onPriorityFilterChanged(if (isSelected) null else priority)
+                refreshUi()
             }
             binding.chipGroupPriority.addView(chip)
         }
@@ -170,6 +173,7 @@ class StudyBlocksActivity : AppCompatActivity() {
             val isSelected = status == selectedStatus
             val chip = createChip(label, isSelected) {
                 viewModel.onStatusFilterChanged(status)
+                refreshUi()
             }
             binding.chipGroupStatus.addView(chip)
         }

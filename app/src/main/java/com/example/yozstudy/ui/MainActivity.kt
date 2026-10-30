@@ -4,19 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yozstudy.ServiceLocator
 import com.example.yozstudy.databinding.ActivityMainBinding
 import com.example.yozstudy.domain.model.DailyProgress
 import com.example.yozstudy.domain.model.StudyBlockWithDetails
-import com.example.yozstudy.viewmodel.StudyBlockFormUiState
 import com.example.yozstudy.viewmodel.StudyBlockListViewModel
-import com.example.yozstudy.viewmodel.StudyBlockListUiState
 import com.example.yozstudy.viewmodel.StudyViewModelFactory
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,8 +29,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupRecyclerView()
-        setupObservers()
         setupListeners()
+
+        // Carga inicial síncrona
+        refreshUi()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refrescar al volver a primer plano por si se creó, editó o eliminó un bloque
+        refreshUi()
     }
 
     private fun setupRecyclerView() {
@@ -44,23 +46,16 @@ class MainActivity : AppCompatActivity() {
         // binding.rvStudyBlocks.adapter = yourAdapter
     }
 
-    private fun setupObservers() {
-        // Since the ViewModel uses StateFlow (uiState), we observe it safely with repeatOnLifecycle
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    updateUi(state)
-                }
-            }
-        }
-    }
+    private fun refreshUi() {
+        // Obtenemos los datos directamente del ViewModel de forma síncrona
+        val blocks = viewModel.getFilteredBlocks()
+        val progress = viewModel.getDailyProgress()
 
-    private fun updateUi(state: StudyBlockListUiState) {
         // 1. Update the study blocks list
-        updateStudyBlocksList(state.items)
+        updateStudyBlocksList(blocks)
 
         // 2. Update today's progress card using 'total' and 'done' from DailyProgress
-        updateProgressCard(state.progress)
+        updateProgressCard(progress)
     }
 
     private fun updateStudyBlocksList(blocks: List<StudyBlockWithDetails>) {
@@ -82,7 +77,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupListeners() {
         // Floating action button to open the study block creation form
         binding.fabAddBlock.setOnClickListener {
-            val intent = Intent(this, StudyBlockFormUiState::class.java)
+            val intent = Intent(this, StudyBlockFormActivity::class.java)
             startActivity(intent)
         }
     }

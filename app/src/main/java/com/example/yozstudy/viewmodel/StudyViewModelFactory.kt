@@ -2,20 +2,10 @@ package com.example.yozstudy.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.domain.repository.StudyRepository
+import com.example.yozstudy.domain.repository.StudyRepository
 
 /**
  * Creates the ViewModels of the app, which need a repository in their constructor.
- *
- * Example inside an Activity or a Fragment:
- * ```
- * private val viewModel: StudyBlockListViewModel by viewModels {
- *     StudyViewModelFactory(ServiceLocator.repository)
- * }
- * ```
- *
- * @param blockId needed by [StudyBlockDetailViewModel], optional for [StudyBlockFormViewModel]
- *                (null creates a new block, an id edits that block).
  */
 class StudyViewModelFactory(
     private val repository: StudyRepository,
@@ -30,11 +20,13 @@ class StudyViewModelFactory(
         modelClass.isAssignableFrom(StudyBlockFormViewModel::class.java) ->
             StudyBlockFormViewModel(repository, blockId) as T
 
-        modelClass.isAssignableFrom(StudyBlockDetailViewModel::class.java) ->
-            StudyBlockDetailViewModel(
-                repository,
-                requireNotNull(blockId) { "StudyBlockDetailViewModel needs a blockId" }
-            ) as T
+        modelClass.isAssignableFrom(StudyBlockDetailViewModel::class.java) -> {
+            val viewModel = StudyBlockDetailViewModel(repository)
+            if (blockId != null && blockId != -1L) {
+                viewModel.initBlockId(blockId)
+            }
+            viewModel as T
+        }
 
         modelClass.isAssignableFrom(PlacesViewModel::class.java) ->
             PlacesViewModel(repository) as T

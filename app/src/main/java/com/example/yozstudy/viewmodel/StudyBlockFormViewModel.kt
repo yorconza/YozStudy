@@ -1,7 +1,6 @@
 package com.example.yozstudy.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.yozstudy.domain.model.BlockStatus
 import com.example.yozstudy.domain.model.Priority
 import com.example.yozstudy.domain.model.StudyBlock
@@ -10,14 +9,8 @@ import com.example.yozstudy.domain.model.Subject
 import com.example.yozstudy.domain.repository.StudyRepository
 import com.example.yozstudy.util.Constants
 import com.example.yozstudy.util.DateTimeUtils
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
-/** State of the "New block" / "Edit block" form. */
+/** State of the "New block" / "Edit block" form using direct synchronous properties. */
 data class StudyBlockFormUiState(
     val isEditing: Boolean = false,
     val isLoading: Boolean = false,
@@ -28,8 +21,6 @@ data class StudyBlockFormUiState(
     val priority: Priority = Priority.MEDIUM,
     val placeId: Long? = null,
     val photoUri: String? = null,
-    val subjects: List<Subject> = emptyList(),
-    val places: List<StudyPlace> = emptyList(),
     val errors: Set<FormError> = emptySet(),
     val showDatePicker: Boolean = false,
     val showTimePicker: Boolean = false,
@@ -38,8 +29,7 @@ data class StudyBlockFormUiState(
 )
 
 /**
- * ViewModel of the block form.
- *
+ * ViewModel of the block form using synchronous logic.
  * @param blockId id of the block to edit, or null to create a new one.
  */
 class StudyBlockFormViewModel(
@@ -48,71 +38,101 @@ class StudyBlockFormViewModel(
     clock: () -> Long = System::currentTimeMillis
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(
-        StudyBlockFormUiState(
-            isEditing = blockId != null,
-            isLoading = blockId != null,
-            startAtMillis = DateTimeUtils.nextFullHour(clock())
-        )
+    private var uiState = StudyBlockFormUiState(
+        isEditing = blockId != null,
+        isLoading = blockId != null,
+        startAtMillis = DateTimeUtils.nextFullHour(clock())
     )
-    val uiState: StateFlow<StudyBlockFormUiState> = _uiState.asStateFlow()
 
     /** Status of the block being edited, so editing does not reset it to pending. */
     private var originalStatus: BlockStatus = BlockStatus.PENDING
 
     init {
-        observeOptions()
         blockId?.let { loadBlock(it) }
     }
 
+    fun getUiState(): StudyBlockFormUiState = uiState
+
     // region Field changes
 
-    fun onTopicChanged(value: String) = _uiState.update {
-        it.copy(
+    fun onTopicChanged(value: String) {
+        uiState = uiState.copy(
             topic = value.take(Constants.TOPIC_MAX_LENGTH),
-            errors = it.errors - FormError.TOPIC_EMPTY
+            errors = uiState.errors - FormError.TOPIC_EMPTY
         )
     }
 
-    fun onSubjectSelected(subjectId: Long) = _uiState.update {
-        it.copy(subjectId = subjectId, errors = it.errors - FormError.SUBJECT_MISSING)
+    fun onSubjectSelected(subjectId: Long) {
+        uiState = uiState.copy(
+            subjectId = subjectId,
+            errors = uiState.errors - FormError.SUBJECT_MISSING
+        )
     }
 
-    fun onDurationChanged(minutes: Int) = _uiState.update {
-        it.copy(durationMinutes = minutes, errors = it.errors - FormError.DURATION_INVALID)
+    fun onDurationChanged(minutes: Int) {
+        uiState = uiState.copy(
+            durationMinutes = minutes,
+            errors = uiState.errors - FormError.DURATION_INVALID
+        )
     }
 
-    fun onPriorityChanged(priority: Priority) = _uiState.update { it.copy(priority = priority) }
+    fun onPriorityChanged(priority: Priority) {
+        uiState = uiState.copy(priority = priority)
+    }
 
     /** Pass null for "no place". */
-    fun onPlaceSelected(placeId: Long?) = _uiState.update { it.copy(placeId = placeId) }
+    fun onPlaceSelected(placeId: Long?) {
+        uiState = uiState.copy(placeId = placeId)
+    }
 
     /** Pass the URI returned by the camera or the gallery, or null to remove the photo. */
-    fun onPhotoSelected(photoUri: String?) = _uiState.update { it.copy(photoUri = photoUri) }
+    fun onPhotoSelected(photoUri: String?) {
+        uiState = uiState.copy(photoUri = photoUri)
+    }
+
+    // endregion
+
+    // region Data retrieval for options
+
+    fun getSubjects(): List<Subject> {
+        return repository.getSubjectsSync()
+    }
+
+    fun getPlaces(): List<StudyPlace> {
+        return repository.getPlacesSync()
+    }
 
     // endregion
 
     // region Date and time dialogs
 
-    fun onDatePickerRequested() = _uiState.update { it.copy(showDatePicker = true) }
+    fun onDatePickerRequested() {
+        uiState = uiState.copy(showDatePicker = true)
+    }
 
-    fun onDatePickerDismissed() = _uiState.update { it.copy(showDatePicker = false) }
+    fun onDatePickerDismissed() {
+        uiState = uiState.copy(showDatePicker = false)
+    }
 
     /** [month] is zero based (January = 0), like the Android date picker returns it. */
-    fun onDateSelected(year: Int, month: Int, dayOfMonth: Int) = _uiState.update {
-        it.copy(
-            startAtMillis = DateTimeUtils.withDate(it.startAtMillis, year, month, dayOfMonth),
+    fun onDateSelected(year: Int, month: Int, dayOfMonth: Int) {
+        uiState = uiState.copy(
+            startAtMillis = DateTimeUtils.withDate(uiState.startAtMillis, year, month, dayOfMonth),
             showDatePicker = false
         )
     }
 
-    fun onTimePickerRequested() = _uiState.update { it.copy(showTimePicker = true) }
+    fun onTimePickerRequested() {
+        uiState = uiState.copy(showTimePicker = true)
+    }
 
-    fun onTimePickerDismissed() = _uiState.update { it.copy(showTimePicker = false) }
+    fun onTimePickerDismissed() {
+        uiState = uiState.copy(showTimePicker = false)
+    }
 
-    fun onTimeSelected(hour: Int, minute: Int) = _uiState.update {
-        it.copy(
-            startAtMillis = DateTimeUtils.withTime(it.startAtMillis, hour, minute),
+    fun onTimeSelected(hour: Int, minute: Int) {
+        uiState = uiState.copy(
+            startAtMillis = DateTimeUtils.withTime(uiState.startAtMillis, hour, minute),
             showTimePicker = false
         )
     }
@@ -120,28 +140,30 @@ class StudyBlockFormViewModel(
     // endregion
 
     fun onSaveClicked() {
-        val state = _uiState.value
-        val errors = validate(state)
+        val errors = validate(uiState)
         if (errors.isNotEmpty()) {
-            _uiState.update { it.copy(errors = errors) }
+            uiState = uiState.copy(errors = errors)
             return
         }
-        val subjectId = state.subjectId ?: return
+        val subjectId = uiState.subjectId ?: return
         val block = StudyBlock(
             id = blockId ?: 0L,
             subjectId = subjectId,
-            topic = state.topic.trim(),
-            startAtMillis = state.startAtMillis,
-            durationMinutes = state.durationMinutes,
-            priority = state.priority,
+            topic = uiState.topic.trim(),
+            startAtMillis = uiState.startAtMillis,
+            durationMinutes = uiState.durationMinutes,
+            priority = uiState.priority,
             status = originalStatus,
-            placeId = state.placeId,
-            photoUri = state.photoUri
+            placeId = uiState.placeId,
+            photoUri = uiState.photoUri
         )
-        viewModelScope.launch {
-            if (blockId == null) repository.addBlock(block) else repository.updateBlock(block)
-            _uiState.update { it.copy(isSaved = true, errors = emptySet()) }
+
+        if (blockId == null) {
+            repository.addBlockSync(block)
+        } else {
+            repository.updateBlockSync(block)
         }
+        uiState = uiState.copy(isSaved = true, errors = emptySet())
     }
 
     private fun validate(state: StudyBlockFormUiState): Set<FormError> = buildSet {
@@ -152,36 +174,22 @@ class StudyBlockFormViewModel(
         }
     }
 
-    private fun observeOptions() {
-        viewModelScope.launch {
-            combine(repository.observeSubjects(), repository.observePlaces()) { subjects, places ->
-                subjects to places
-            }.collect { (subjects, places) ->
-                _uiState.update { it.copy(subjects = subjects, places = places) }
-            }
-        }
-    }
-
     private fun loadBlock(id: Long) {
-        viewModelScope.launch {
-            val block = repository.getBlock(id)
-            if (block == null) {
-                _uiState.update { it.copy(isLoading = false) }
-                return@launch
-            }
-            originalStatus = block.status
-            _uiState.update {
-                it.copy(
-                    isLoading = false,
-                    subjectId = block.subjectId,
-                    topic = block.topic,
-                    startAtMillis = block.startAtMillis,
-                    durationMinutes = block.durationMinutes,
-                    priority = block.priority,
-                    placeId = block.placeId,
-                    photoUri = block.photoUri
-                )
-            }
+        val block = repository.getBlockSync(id)
+        if (block == null) {
+            uiState = uiState.copy(isLoading = false)
+            return
         }
+        originalStatus = block.status
+        uiState = uiState.copy(
+            isLoading = false,
+            subjectId = block.subjectId,
+            topic = block.topic,
+            startAtMillis = block.startAtMillis,
+            durationMinutes = block.durationMinutes,
+            priority = block.priority,
+            placeId = block.placeId,
+            photoUri = block.photoUri
+        )
     }
 }

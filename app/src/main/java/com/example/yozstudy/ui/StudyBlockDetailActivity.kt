@@ -4,9 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.example.yozstudy.R
 import com.example.yozstudy.ServiceLocator
 import com.example.yozstudy.databinding.ActivityStudyBlockDetailBinding
@@ -14,7 +11,6 @@ import com.example.yozstudy.domain.model.Priority
 import com.example.yozstudy.domain.model.StudyBlockWithDetails
 import com.example.yozstudy.viewmodel.StudyBlockDetailViewModel
 import com.example.yozstudy.viewmodel.StudyViewModelFactory
-import kotlinx.coroutines.launch
 
 class StudyBlockDetailActivity : AppCompatActivity() {
 
@@ -29,8 +25,18 @@ class StudyBlockDetailActivity : AppCompatActivity() {
         binding = ActivityStudyBlockDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val blockId = intent.getLongExtra(EXTRA_BLOCK_ID, -1L)
+        if (blockId != -1L) {
+            viewModel.initBlockId(blockId)
+        }
+
         setupListeners()
-        setupObservers()
+        refreshUi()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshUi()
     }
 
     private fun setupListeners() {
@@ -46,27 +52,22 @@ class StudyBlockDetailActivity : AppCompatActivity() {
             finish()
         }
 
-        // Correct ViewModel call to change the status
         binding.btnToggleStatus.setOnClickListener {
-            // Get the current block from the ViewModel state
-            val currentBlock = viewModel.uiState.value.details?.block
+            val details = viewModel.getBlockDetails()
+            val currentBlock = details?.block
 
             if (currentBlock?.isDone == true) {
                 viewModel.onMarkPending()
             } else {
                 viewModel.onMarkDone()
             }
+            refreshUi()
         }
     }
 
-    private fun setupObservers() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    state.details?.let { updateUi(it) }
-                }
-            }
-        }
+    private fun refreshUi() {
+        val details = viewModel.getBlockDetails()
+        details?.let { updateUi(it) }
     }
 
     private fun updateUi(details: StudyBlockWithDetails) {
@@ -78,7 +79,7 @@ class StudyBlockDetailActivity : AppCompatActivity() {
         binding.tvDateTime.text = "Starts: ${currentBlock.startAtMillis}"
         binding.tvDuration.text = getString(R.string.duration_minutes, currentBlock.durationMinutes)
 
-        // Priority using the custom drawables we created
+        // Priority using the custom drawables
         when (currentBlock.priority) {
             Priority.HIGH -> {
                 binding.tvPriorityBadge.text = getString(R.string.priority_high)
@@ -104,5 +105,9 @@ class StudyBlockDetailActivity : AppCompatActivity() {
         }
 
         binding.tvPlace.text = details.place?.name ?: getString(R.string.place_none)
+    }
+
+    companion object {
+        const val EXTRA_BLOCK_ID = "extra_block_id"
     }
 }
