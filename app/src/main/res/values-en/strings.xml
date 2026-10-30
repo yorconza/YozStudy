@@ -13,7 +13,7 @@
     <string name="new_place">New place</string>
     <string name="edit_place">Edit place</string>
     <string name="today_progress">Today progress</string>
-    <string name="progress_count">%1$d de %2$d blocks</string>
+    <string name="progress_count">%1$d of %2$d blocks</string>
 
 
 
