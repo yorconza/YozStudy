@@ -1,5 +1,6 @@
 package com.example.yozstudy.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.AdapterView
@@ -8,7 +9,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yozstudy.R
-import com.example.yozstudy.ServiceLocator
+import com.example.yozstudy.viewmodel.ServiceLocator
+import com.example.yozstudy.ui.adapter.StudyBlockAdapter
 import com.example.yozstudy.databinding.ActivityStudyBlocksBinding
 import com.example.yozstudy.domain.model.BlockStatus
 import com.example.yozstudy.domain.model.Priority
@@ -22,6 +24,7 @@ import com.google.android.material.chip.Chip
 class StudyBlocksActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStudyBlocksBinding
+    private lateinit var blockAdapter: StudyBlockAdapter
 
     private val viewModel: StudyBlockListViewModel by viewModels {
         StudyViewModelFactory(ServiceLocator.repository)
@@ -36,19 +39,29 @@ class StudyBlocksActivity : AppCompatActivity() {
         setupRecyclerView()
         setupSortSpinner()
 
-        // Carga inicial de la interfaz de forma síncrona
+        // Initial UI load
         refreshUi()
     }
 
     override fun onResume() {
         super.onResume()
-        // Refrescar cada vez que la activity vuelva a primer plano por si hubo cambios
+        // Refresh every time the activity returns to the foreground in case of changes
         refreshUi()
     }
 
     private fun setupRecyclerView() {
+        blockAdapter = StudyBlockAdapter(emptyList()) { selectedItem ->
+            val intent = Intent(this, StudyBlockDetailActivity::class.java).apply {
+                putExtra("EXTRA_BLOCK_ID", selectedItem.block.id)
+            }
+            startActivity(intent)
+        }
         binding.rvFilteredBlocks.layoutManager = LinearLayoutManager(this)
-        // binding.rvFilteredBlocks.adapter = studyBlockAdapter
+        binding.rvFilteredBlocks.adapter = blockAdapter
+    }
+
+    private fun updateFilteredList(items: List<StudyBlockWithDetails>) {
+        blockAdapter.updateData(items)
     }
 
     private fun setupSortSpinner() {
@@ -72,12 +85,11 @@ class StudyBlocksActivity : AppCompatActivity() {
     }
 
     private fun refreshUi() {
-        // get data by viewmodel, calling methods
         val items = viewModel.getFilteredBlocks()
         val subjects = viewModel.getSubjects()
         val currentFilter = viewModel.getCurrentFilter()
 
-        // 1. Update results count (using quantity strings plurals from strings.xml)
+        // 1. Update results count
         val count = items.size
         binding.tvResultsCount.text = resources.getQuantityString(
             R.plurals.results_count,
@@ -85,16 +97,16 @@ class StudyBlocksActivity : AppCompatActivity() {
             count
         )
 
-        // 2. Populate subject chips if not already populated
+        // 2. Populate subject chips
         populateSubjectChips(subjects, currentFilter.subjectId)
 
-        // 3. Populate/update day chips
+        // 3. Populate day chips
         populateDayChips(currentFilter.dayOfWeek)
 
-        // 4. Populate/update priority chips
+        // 4. Populate priority chips
         populatePriorityChips(currentFilter.priority)
 
-        // 5. Populate/update status chips
+        // 5. Populate status chips
         populateStatusChips(currentFilter.status)
 
         // 6. Submit updated list to the adapter
@@ -141,7 +153,6 @@ class StudyBlocksActivity : AppCompatActivity() {
     }
 
     private fun populatePriorityChips(selectedPriority: Priority?) {
-        // High, Medium, Low
         binding.chipGroupPriority.removeAllViews()
 
         val priorities = listOf(
@@ -186,9 +197,5 @@ class StudyBlocksActivity : AppCompatActivity() {
             this.isChecked = isChecked
             this.setOnClickListener { onClick() }
         }
-    }
-
-    private fun updateFilteredList(items: List<StudyBlockWithDetails>) {
-        // adapter.submitList(items)
     }
 }

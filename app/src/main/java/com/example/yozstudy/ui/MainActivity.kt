@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.yozstudy.ServiceLocator
+import com.example.yozstudy.viewmodel.ServiceLocator
 import com.example.yozstudy.databinding.ActivityMainBinding
 import com.example.yozstudy.domain.model.DailyProgress
 import com.example.yozstudy.domain.model.StudyBlockWithDetails
@@ -76,8 +76,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         // Floating action button to open the study block creation form
-        binding.fabAddBlock.setOnClickListener {
-            val intent = Intent(this, StudyBlockFormActivity::class.java)
+        binding.btnOpenForm.setOnClickListener {
+            val intent = Intent(this, StudyBlocksFormActivity::class.java)
             startActivity(intent)
         }
     }

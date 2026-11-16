@@ -3,17 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F6FA"
-    tools:context=".ui.StudyBlockFormActivity">
+    tools:context=".ui.StudyBlocksFormActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="32dp">
 
-        <!-- Top Bar -->
+        <!-- Top Navigation Bar -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,78 +24,117 @@
             android:gravity="center_vertical"
             android:padding="16dp">
 
+            <!-- Back button to return to the previous screen -->
             <ImageButton
                 android:id="@+id/btnBack"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/cd_back"
                 android:src="@drawable/ic_arrow_back"
-                app:tint="@android:color/white" />
+                app:tint="@android:color/white"
+                android:contentDescription="Back" />
 
+            <!-- Form Title -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="@string/new_block"
+                android:text="New Block"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Form Fields Container -->
+        <!-- Main Form Container -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Subject -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_subject"
-                android:textColor="#666666"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/spinnerSubject"
+            <!-- Search Section by ID or Title -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_rounded_input"
-                android:paddingHorizontal="12dp" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical">
 
-            <!-- Topic -->
+                <EditText
+                    android:id="@+id/etSearchBlock"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_edit_text_white"
+                    android:hint="Search block ID or title..."
+                    android:textColor="@android:color/black"
+                    android:textColorHint="#999999"
+                    android:textSize="14sp"
+                    android:paddingHorizontal="12dp"
+                    android:inputType="text" />
+
+                <Button
+                    android:id="@+id/btnSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="8dp"
+                    android:backgroundTint="#3F51B5"
+                    android:text="Search"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <!-- Subject Input Field -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/label_topic"
-                android:textColor="#666666"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:text="Subject"
+                android:textColor="#333333"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/etSubject"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_edit_text_white"
+                android:hint="e.g. Mobile Programming"
+                android:textColor="@android:color/black"
+                android:textColorHint="#999999"
+                android:textSize="14sp"
+                android:paddingHorizontal="12dp"
+                android:inputType="text"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Topic / Description Input Field -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Topic / Description"
+                android:textColor="#333333"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
 
             <EditText
                 android:id="@+id/etTopic"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_rounded_input"
-                android:hint="@string/error_topic_empty"
-                android:inputType="text"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_edit_text_white"
+                android:hint="e.g. Room and ViewModel Review"
+                android:textColor="@android:color/black"
+                android:textColorHint="#999999"
+                android:textSize="14sp"
                 android:paddingHorizontal="12dp"
-                android:textSize="14sp" />
+                android:inputType="text"
+                android:layout_marginBottom="12dp" />
 
-            <!-- Date & Time Row -->
+            <!-- Date and Time Row Selection -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
 
-                <!-- Date -->
+                <!-- Date Selection Container -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -104,25 +145,24 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_date"
-                        android:textColor="#666666"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
+                        android:text="Date"
+                        android:textColor="#333333"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp" />
 
                     <EditText
                         android:id="@+id/etDate"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="6dp"
-                        android:background="@drawable/bg_rounded_input"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_edit_text_white"
+                        android:clickable="true"
                         android:focusable="false"
-                        android:hint="DD/MM/YYYY"
-                        android:inputType="date"
-                        android:paddingHorizontal="12dp"
-                        android:textSize="14sp" />
+                        android:textColor="@android:color/black"
+                        android:textSize="14sp"
+                        android:paddingHorizontal="12dp" />
                 </LinearLayout>
 
-                <!-- Time -->
+                <!-- Time Selection Container -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -133,173 +173,147 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_time"
-                        android:textColor="#666666"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
+                        android:text="Time"
+                        android:textColor="#333333"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp" />
 
                     <EditText
                         android:id="@+id/etTime"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="6dp"
-                        android:background="@drawable/bg_rounded_input"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_edit_text_white"
+                        android:clickable="true"
                         android:focusable="false"
-                        android:hint="HH:MM"
-                        android:inputType="time"
-                        android:paddingHorizontal="12dp"
-                        android:textSize="14sp" />
+                        android:textColor="@android:color/black"
+                        android:textSize="14sp"
+                        android:paddingHorizontal="12dp" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Duration -->
+            <!-- Duration Input Field -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/label_duration"
-                android:textColor="#666666"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:text="Duration (minutes)"
+                android:textColor="#333333"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
 
-            <Spinner
-                android:id="@+id/spinnerDuration"
+            <EditText
+                android:id="@+id/etDuration"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_rounded_input"
-                android:paddingHorizontal="12dp" />
+                android:layout_height="48dp"
+                android:background="@drawable/bg_edit_text_white"
+                android:hint="90"
+                android:textColor="@android:color/black"
+                android:textColorHint="#999999"
+                android:textSize="14sp"
+                android:paddingHorizontal="12dp"
+                android:inputType="number"
+                android:layout_marginBottom="12dp" />
 
-            <!-- Priority -->
+            <!-- Priority Options -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/label_priority"
-                android:textColor="#666666"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:text="Priority"
+                android:textColor="#333333"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
 
-            <com.google.android.material.button.MaterialButtonToggleGroup
-                android:id="@+id/toggleGroupPriority"
+            <RadioGroup
+                android:id="@+id/rgPriority"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                app:singleSelection="true"
-                app:selectionRequired="true">
-
-                <Button
-                    android:id="@+id/btnPriorityLow"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="@string/priority_low" />
-
-                <Button
-                    android:id="@+id/btnPriorityMedium"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="@string/priority_medium" />
-
-                <Button
-                    android:id="@+id/btnPriorityHigh"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="@string/priority_high" />
-            </com.google.android.material.button.MaterialButtonToggleGroup>
-
-            <!-- Study Place -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/label_place"
-                android:textColor="#666666"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/spinnerPlace"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/bg_rounded_input"
-                android:paddingHorizontal="12dp" />
-
-            <!-- Notes Photo (Optional) -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/label_photo"
-                android:textColor="#666666"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
                 android:orientation="horizontal"
+                android:layout_marginBottom="12dp"
                 android:gravity="center_vertical">
 
-                <ImageView
-                    android:id="@+id/ivNotesPreview"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:background="@drawable/bg_rounded_input"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_image_placeholder"
-                    android:contentDescription="@string/cd_block_photo" />
+                <RadioButton
+                    android:id="@+id/rbLow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Low"
+                    android:textColor="@android:color/black"
+                    android:layout_marginEnd="16dp" />
 
-                <Button
-                    android:id="@+id/btnCamera"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="12dp"
-                    android:text="@string/action_take_photo" />
+                <RadioButton
+                    android:id="@+id/rbMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Medium"
+                    android:textColor="@android:color/black"
+                    android:layout_marginEnd="16dp" />
 
-                <Button
-                    android:id="@+id/btnGallery"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="12dp"
-                    android:text="@string/action_pick_from_gallery" />
-            </LinearLayout>
+                <RadioButton
+                    android:id="@+id/rbHigh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="High"
+                    android:textColor="@android:color/black" />
+            </RadioGroup>
 
-            <!-- Action Buttons -->
+            <!-- Study Place Spinner -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Study Place"
+                android:textColor="#333333"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/etPlace"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_edit_text_white"
+                android:hint="e.g. Home Office, Library..."
+                android:textColor="@android:color/black"
+                android:textColorHint="#999999"
+                android:textSize="14sp"
+                android:paddingHorizontal="12dp"
+                android:inputType="text"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Form Action Buttons (Cancel, Delete, Save) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="3">
 
+                <!-- Cancel Button -->
                 <Button
                     android:id="@+id/btnCancel"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="0dp"
                     android:layout_height="54dp"
                     android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/action_cancel" />
+                    android:layout_marginEnd="4dp"
+                    android:text="Cancel"
+                    android:textColor="#3F51B5" />
 
+                <!-- Delete Button -->
+                <Button
+                    android:id="@+id/btnDelete"
+                    android:layout_width="0dp"
+                    android:layout_height="54dp"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="4dp"
+                    android:backgroundTint="#E53935"
+                    android:text="Delete"
+                    android:textColor="@android:color/white" />
+
+                <!-- Save/Update Button -->
                 <Button
                     android:id="@+id/btnSave"
                     android:layout_width="0dp"
                     android:layout_height="54dp"
                     android:layout_weight="1"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="4dp"
                     android:backgroundTint="#3F51B5"
-                    android:text="@string/action_save"
+                    android:text="Save"
                     android:textColor="@android:color/white" />
             </LinearLayout>
 
