@@ -18,36 +18,51 @@ class StudyBlockAdapter(
 ) : RecyclerView.Adapter<StudyBlockAdapter.BlockViewHolder>() {
 
     class BlockViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val tvTitle: TextView = view.findViewById(R.id.tvItemTitle)
         val tvSubject: TextView = view.findViewById(R.id.tvItemSubject)
         val tvTopic: TextView = view.findViewById(R.id.tvItemTopic)
         val tvDateTime: TextView = view.findViewById(R.id.tvItemDateTime)
         val tvDuration: TextView = view.findViewById(R.id.tvItemDuration)
+        val tvPlace: TextView = view.findViewById(R.id.tvItemPlace)
         val tvStatus: TextView = view.findViewById(R.id.tvItemStatus)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BlockViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.activity_block_card, parent, false)
+            .inflate(R.layout.item_study_block, parent, false)
         return BlockViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: BlockViewHolder, position: Int) {
         val item = items[position]
         val block = item.block
+        val context = holder.itemView.context
 
-        // Access the subject name securely from item.subject
-        holder.tvSubject.text = item.subject?.name ?: "No subject"
-        holder.tvTopic.text = block.topic
+        // 1. Título principal (Topic / Description del formulario, ej: "Class")
+        holder.tvTitle.text = block.topic.ifBlank { "Sin título" }
 
-        // Format date and duration
+        // 2. Materia (si existe) o Prioridad si no se indicó materia
+        holder.tvSubject.text = item.subject?.name?.takeIf { it.isNotBlank() }
+            ?: "Prioridad: ${block.priority.name}"
+
+        // 3. Prioridad en la tercera línea para no repetir block.topic
+        holder.tvTopic.text = "Prioridad: ${block.priority.name}"
+
+        // 4. Fecha y duración
         val dateFormat = SimpleDateFormat("E dd/MM · HH:mm", Locale.getDefault())
         holder.tvDateTime.text = dateFormat.format(Date(block.startAtMillis))
         holder.tvDuration.text = "${block.durationMinutes} min"
 
-        // Set status text
-        holder.tvStatus.text = if (block.status == BlockStatus.DONE) "Done" else "Pending"
+        // 5. Lugar de estudio
+        holder.tvPlace.text = item.place?.name?.takeIf { it.isNotBlank() } ?: "Sin lugar"
 
-        // Handle card click to open detail screen
+        // 6. Estado
+        holder.tvStatus.text = if (block.status == BlockStatus.DONE) {
+            context.getString(R.string.status_done)
+        } else {
+            context.getString(R.string.status_pending)
+        }
+
         holder.itemView.setOnClickListener {
             onBlockClick(item)
         }

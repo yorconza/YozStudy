@@ -34,7 +34,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Viernes 16 de octubre"
             android:textColor="#E0E0E0"
             android:textSize="14sp" />
     </LinearLayout>
