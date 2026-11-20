@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.yozstudy.R
-import com.example.yozstudy.ServiceLocator
+import com.example.yozstudy.viewmodel.ServiceLocator
 import com.example.yozstudy.databinding.ActivityStudyPlacesBinding
 import com.example.yozstudy.domain.model.PlaceStats
 import com.example.yozstudy.viewmodel.PlacesViewModel

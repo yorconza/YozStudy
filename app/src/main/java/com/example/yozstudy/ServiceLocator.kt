@@ -1,14 +1,14 @@
-package com.example.yozstudy
+package com.example.yozstudy.viewmodel
 
-import com.example.yozstudy.data.memory.MemoryDataRepository
+
+import com.example.yozstudy.data.repository.MemoryDataRepository
 import com.example.yozstudy.domain.repository.StudyRepository
 
 /**
- * Gives every screen the same repository instance, so they all see the same data.
- *
- * To save data on the device later, only the line inside `lazy` has to change
- * (for example to a Room based repository); no ViewModel needs to be touched.
+ * Service locator that provides a single shared instance of StudyRepository.
  */
+
+
 object ServiceLocator {
     val repository: StudyRepository by lazy { MemoryDataRepository.withSampleData() }
 }
